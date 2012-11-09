@@ -47,10 +47,8 @@
               errorBlock:(void(^)(NSError *error))errorBlock;
 
 /* Region boundaries crossing service */
-+ (BOOL)boundaryCrossingWithAccuracy:(CLLocationAccuracy)accuracy
-                              region:(CLRegion *)region
-                        enteredBlock:(void(^)(CLRegion *region, BOOL *stop))enteredBlock
-                         exitedBlock:(void(^)(CLRegion *region, BOOL *stop))exitedBlock
-                          errorBlock:(void(^)(CLRegion *region, NSError *error))errorBlock; /* The region may be nil */
-
++ (BOOL)boundaryCrossingWithRegion:(CLRegion *)region
+                      enteredBlock:(void(^)(CLRegion *region, BOOL *stop))enteredBlock
+                       exitedBlock:(void(^)(CLRegion *region, BOOL *stop))exitedBlock
+                        errorBlock:(void(^)(CLRegion *region, NSError *error))errorBlock; /* The region may be nil */
 @end

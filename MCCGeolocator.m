@@ -63,7 +63,7 @@
 
 + (BOOL)significantLocationChangesWithBlock:(void(^)(CLLocation *newLocation, CLLocation *oldLocation, BOOL *stop))updateBlock
                                  errorBlock:(void(^)(NSError *error))errorBlock {
-  MCCGeolocator *o = [[[self alloc]init]autorelease];
+  __block MCCGeolocator *o = [[[self alloc]init]autorelease];
   if (!o) return FALSE;
   
   void(^cleanupBlock)(void) = ^{
@@ -91,7 +91,7 @@
 
 + (BOOL)headingWithBlock:(void(^)(CLHeading *newHeading, BOOL *stop))updateBlock
               errorBlock:(void(^)(NSError *error))errorBlock {
-  MCCGeolocator *o = [[[self alloc]init]autorelease];
+  __block MCCGeolocator *o = [[[self alloc]init]autorelease];
   if (!o) return FALSE;
   
   void(^cleanupBlock)(void) = ^{
@@ -117,12 +117,11 @@
   return TRUE;
 }
 
-+ (BOOL)boundaryCrossingWithAccuracy:(CLLocationAccuracy)accuracy
-                              region:(CLRegion *)region
-                        enteredBlock:(void(^)(CLRegion *region, BOOL *stop))enteredBlock
-                         exitedBlock:(void(^)(CLRegion *region, BOOL *stop))exitedBlock
-                          errorBlock:(void(^)(CLRegion *region, NSError *error))errorBlock {
-  MCCGeolocator *o = [[[self alloc]init]autorelease];
++ (BOOL)boundaryCrossingWithRegion:(CLRegion *)region
+                      enteredBlock:(void(^)(CLRegion *region, BOOL *stop))enteredBlock
+                       exitedBlock:(void(^)(CLRegion *region, BOOL *stop))exitedBlock
+                        errorBlock:(void(^)(CLRegion *region, NSError *error))errorBlock {
+  __block MCCGeolocator *o = [[[self alloc]init]autorelease];
   if (!o) return FALSE;
   
   void(^cleanupBlock)(void) = ^{
@@ -150,7 +149,7 @@
     cleanupBlock();
   };
   
-  [o.manager startMonitoringForRegion:region desiredAccuracy:accuracy];
+  [o.manager startMonitoringForRegion:region];
     
   return TRUE;
 }
@@ -169,7 +168,9 @@
 }
 
 - (void)dealloc {
-  NSLog(@"Dealloc");
+#ifdef DEBUG_MCCGeolocator
+  NSLog(@"dealloc %@", NSStringFromClass([self class]));
+#endif
   self.manager = nil;
   self.updateBlock = nil;
   self.updateHeadingBlock = nil;
